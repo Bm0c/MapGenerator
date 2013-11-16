@@ -1,7 +1,7 @@
 import math
 class hexagone:
 	
-	l = 1
+	l = 10
 	L = (2 * l) / (math.sqrt(3))
 
 	def __init__(self,u,v):
@@ -18,8 +18,8 @@ class hexagone:
 	 return [(self.u + 1,self.v),(self.u + 1,self.v + 1),(self.u,self.v+1),(self.u -1,self.v),(self.u -1,self.v - 1),(self.u,self.v - 1)]
 
 	def getXY(self):
-	 x = (1/hexagone.l) * self.u
-	 y = (2/(3*hexagone.L)) * self.u + (4/(3 * hexagone.L)) * self.v
+	 x = hexagone.l * self.u - (hexagone.l/2) * self.v
+	 y = (3 * hexagone.L / 4) * self.v
 	 return x,y
 
 
