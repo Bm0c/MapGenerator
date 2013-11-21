@@ -11,7 +11,7 @@ class Case(hexagone):
 	def sprite(self):
 	 h = sf.CircleShape(self.L/2,6)
 	 h.position = self.getXY()
-	 h.fill_color = self.couleur
+	 h.fill_color = sf.Color(self.couleur,self.couleur,self.couleur)
 	 return h
 
 
