@@ -58,6 +58,7 @@ class MapGen:
         self.tab = aux
 
     def Moyenne(self,x,y):
+       aux = []
        moyenne = 0
        compteur = 0
        for elt in self.tab[x,y].Voisins():
@@ -65,9 +66,13 @@ class MapGen:
          try:
           moyenne = moyenne + self.tab[x1,y1].couleur
           compteur = compteur + 1
+          aux.append(elt)
          except:
           a = 42
-       return moyenne // compteur
+       moyenne = moyenne // compteur
+       x1,y1 =  aux[randrange(compteur)]
+       moyenne = moyenne + self.tab[x1,y1].couleur
+       return moyenne // 2
 
     def Finalisation(self):
         aux = {}
