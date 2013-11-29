@@ -99,10 +99,33 @@ class MapGen:
         #for elt in aux.values():
         #    print (elt)
 
-def aff():
+def aff(w,Poney):
  for elt in Poney.tab.values():
   w.draw(elt.sprite())
  w.display()
-Poney = MapGen(4,4,[20,56,70,100])
-Poney.matriceRandom()
-Poney.cycle(1)
+def cycle(t): 
+ Poney1 = MapGen(4,4,[20,56,70,100])
+ Poney1.matriceRandom()
+ Poney1.cycle(t)
+ 
+ Poney2 = MapGen(4,4,[20,56,70,100])
+ Poney2.matriceRandom()
+ Poney2.cycle(t)
+ 
+ Poney3 = MapGen(4,4,[20,56,70,100])
+ Poney3.matriceRandom()
+ Poney3.cycle(t)
+ 
+ Poney = MapGen(Poney3.X,Poney3.Y,[])
+ Poney.matriceRandom()
+ x = 0
+ while x < Poney3.X:
+  y = 0
+  while y < Poney3.Y:
+   Poney.tab[x,y].r = Poney1.tab[x,y].couleur
+   Poney.tab[x,y].g = Poney2.tab[x,y].couleur
+   Poney.tab[x,y].b = Poney3.tab[x,y].couleur
+   y = y + 1
+  x = x + 1
+ return Poney
+

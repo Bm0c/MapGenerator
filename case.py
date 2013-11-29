@@ -6,12 +6,14 @@ class Case(hexagone):
 	def __init__(self,u,v,couleur):
 	 self.u = u
 	 self.v = v
+	 self.r = 0
+	 self.b = 0
 	 self.couleur = couleur
-
+	 self.g = 0
 	def sprite(self):
 	 h = sf.CircleShape(self.L/2,6)
 	 h.position = self.getXY()
-	 h.fill_color = sf.Color(self.couleur,self.couleur,self.couleur)
+	 h.fill_color = sf.Color(self.r,self.g,self.b)
 	 return h
 
 
