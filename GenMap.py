@@ -7,15 +7,20 @@ class MapGen:
         self.X = largeur
         self.Y = hauteur
         self.listeCoeff = coeff
-        self.MAXVALUE = 250
+        self.MAXVALUE = 255
         self.tab = {}
+
+    def ligne (self,y): 
+        return (y+1)//2
+
 
     def matriceRandom(self):
         y = 0
         while y < self.Y:
-            x = 0
-            while x < self.X:
-                self.tab[x,y]= Case(x,y,randrange(self.MAXVALUE))
+            init = self.ligne(y)
+            x = init
+            while x < self.X + init:
+                self.tab[x,y]= Case(x,y,randrange(self.MAXVALUE),randrange(self.MAXVALUE),randrange(self.MAXVALUE))
                 x += 1
             y += 1
 
@@ -24,20 +29,24 @@ class MapGen:
             duree -= 1
             self.Division()
             self.Egalisation()
-        self.Finalisation()
         
 
     def Division(self,mod = 2):
         aux = {}
         y = 0
         while y < self.Y:
-            x = 0
-            while x < self.X:
+            init = self.ligne(y)
+            x = init
+            offset = 0
+            if x * 2 > y:
+                offset = 1
+            while x < self.X + init:
                 y2 = 0
                 while y2 < mod:
-                    x2 = 0
-                    while x2 < mod:
-                      aux[x*mod+x2, y*mod+y2] = Case(x*mod+x2,y*mod+y2,self.tab[x,y].couleur)
+                    init2 =  self.ligne(y2)
+                    x2 = init2
+                    while x2 < mod + init2:
+                      aux[(x)*mod+x2 - offset, y*mod+y2] = Case((x)*mod+x2 -offset,y*mod+y2,self.tab[x,y].r,self.tab[x,y].b,self.tab[x,y].g)
                       x2 += 1
                     y2 += 1
                 x += 1
@@ -50,29 +59,40 @@ class MapGen:
         aux = {}
         y = 0
         while y < self.Y:
-           x = 0
-           while x < self.X:
-            aux[x,y] = Case(x,y,self.Moyenne(x,y))
+           init = self.ligne(y)
+           x = init
+           while x < self.X + init:
+            (r,b,g) = self.Moyenne(x,y)
+            aux[x,y] = Case(x,y,r,b,g)
             x += 1
            y += 1
         self.tab = aux
 
     def Moyenne(self,x,y):
        aux = []
-       moyenne = 0
+       moyenne_r = 0
+       moyenne_b = 0
+       moyenne_g = 0
        compteur = 0
        for elt in self.tab[x,y].Voisins():
          x1,y1 = elt
          try:
-          moyenne = moyenne + self.tab[x1,y1].couleur
-          compteur = compteur + 1
+          moyenne_r = moyenne_r + self.tab[x1,y1].r
+          moyenne_b = moyenne_b + self.tab[x1,y1].b
+          moyenne_g = moyenne_g + self.tab[x1,y1].g
           aux.append(elt)
+          compteur = compteur + 1
          except:
           a = 42
-       moyenne = moyenne // compteur
+       moyenne_r = moyenne_r // compteur
+       moyenne_b = moyenne_b // compteur
+       moyenne_g = moyenne_g // compteur
        x1,y1 =  aux[randrange(compteur)]
-       moyenne = moyenne + self.tab[x1,y1].couleur
-       return moyenne // 2
+       moyenne_r = moyenne_r + self.tab[x1,y1].r
+       moyenne_b = moyenne_b + self.tab[x1,y1].b
+       moyenne_g = moyenne_g + self.tab[x1,y1].g
+
+       return (moyenne_r // 2,moyenne_b // 2,moyenne_g // 2)
 
     def Finalisation(self):
         aux = {}
@@ -103,29 +123,9 @@ def aff(w,Poney):
  for elt in Poney.tab.values():
   w.draw(elt.sprite())
  w.display()
-def cycle(t): 
- Poney1 = MapGen(4,4,[20,56,70,100])
- Poney1.matriceRandom()
- Poney1.cycle(t)
- 
- Poney2 = MapGen(4,4,[20,56,70,100])
- Poney2.matriceRandom()
- Poney2.cycle(t)
- 
- Poney3 = MapGen(4,4,[20,56,70,100])
- Poney3.matriceRandom()
- Poney3.cycle(t)
- 
- Poney = MapGen(Poney3.X,Poney3.Y,[])
+def cycle(t,d): 
+ Poney = MapGen(d,d,[])
  Poney.matriceRandom()
- x = 0
- while x < Poney3.X:
-  y = 0
-  while y < Poney3.Y:
-   Poney.tab[x,y].r = Poney1.tab[x,y].couleur
-   Poney.tab[x,y].g = Poney2.tab[x,y].couleur
-   Poney.tab[x,y].b = Poney3.tab[x,y].couleur
-   y = y + 1
-  x = x + 1
+ Poney.cycle(t)
+ i = 0
  return Poney
-
