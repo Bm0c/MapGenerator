@@ -1,7 +1,7 @@
 import math
 class hexagone:
 	
-    l = 10
+    l = 8
     L = (2 * l) / (math.sqrt(3))
 
     def __init__(self,u,v):
