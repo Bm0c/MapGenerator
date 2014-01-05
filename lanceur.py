@@ -1,6 +1,6 @@
 import sfml as sf
 from GenMap import *
-w = sf.RenderWindow(sf.VideoMode(1160,1000),"LOLWUT")
+w = sf.RenderTexture(1160,1000)
 w.clear()
 def boucle(t,d):
  w.clear()
@@ -18,6 +18,6 @@ def Generate(t,d,n):
   w.clear()
   a = cycle(t,d)
   aff(w,a)
-  image = w.capture()
-  image.to_file("{0}.png".format(i))
+  image = w.texture.to_image()
+  image.to_file("map{0}.png".format(i))
   i+=1
