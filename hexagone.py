@@ -1,9 +1,12 @@
 import math
 class hexagone:
 	
-    l = 8
+    l = 5
     L = (2 * l) / (math.sqrt(3))
 
+    def setl(l):
+     hexagone.l = l
+     hexagone.L = (2 * l) / (math.sqrt(3))
     def __init__(self,u,v):
      self.u = u
      self.v = v
