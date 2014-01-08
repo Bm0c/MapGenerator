@@ -62,7 +62,7 @@ class MapGen:
       init = self.ligne(y)
       x = init
       while x < self.X + init:
-       self.tab[x,y].biome.set(elt,(self.MAXVALUE* y)//self.Y)
+       self.tab[x,y].biome.set(elt,min((self.MAXVALUE * (y))//self.Y, (self.MAXVALUE * (self.Y - (1 + y)))//(self.Y)))
        x += 1
       y += 1
 

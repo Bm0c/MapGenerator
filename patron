@@ -9,14 +9,12 @@ end
 end def
 
 
-def Climat:20,40,60,80,100
+def Climat:30,80,100
 type:lignes
 begin
 0:COLOR:155:214:212
-1:Polaire
-2:
-3:Chaud
-4:COLOR:173:210:71
+1:
+2:COLOR:173:210:71
 end
 end def
 
