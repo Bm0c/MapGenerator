@@ -1,7 +1,7 @@
 import math
 class hexagone:
 	
-    l = 5
+    l = 6
     L = (2 * l) / (math.sqrt(3))
 
     def setl(l):

@@ -66,7 +66,7 @@ class Make(Reader):
      while line != None and line.split(" ")[0] != "end":
       liste = line.split(":")
       if liste[1] == "COLOR":
-       l.append(sf.Color(int(liste[2]),int(liste[3]),int(liste[4])))
+       l.append(sf.Color(int(liste[2])//2,int(liste[3])//2,int(liste[4])//2))
       else:
        l.append(liste[1])
       line = self.getLine()

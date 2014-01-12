@@ -9,7 +9,7 @@ class MapGen:
      self.Y = hauteur
      self.MAXVALUE = 255
      self.tab = {}
-     a = Make("patron")
+     a = Make("Prog/MapGenerator/patron")
      a.make()
      self.modele = a.modele
      self.makeMatrice()
@@ -167,10 +167,8 @@ def aff(w,Poney):
   w.draw(elt.sprite())
  w.display()
 def cycle(t,d): 
- Poney = MapGen(d,d,[])
+ Poney = MapGen(2*d,d,[])
  Poney.cycle(t)
  i = 0
  return Poney
 
-a = MapGen(4,4,4)
-a.cycle(4)
