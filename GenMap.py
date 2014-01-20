@@ -7,12 +7,14 @@ class MapGen:
     def __init__(self,largeur,hauteur,modele): #X,Y,Liste_Coeff
      self.X = largeur
      self.Y = hauteur
-     self.MAXVALUE = 255
+     self.MAXVALUE = 256
      self.tab = {}
-     a = Make("Prog/MapGenerator/patron")
+     a = Make("patron")
      a.make()
      self.modele = a.modele
      self.makeMatrice()
+
+    def initialise(self):
      types = {}
      types[""] = self.matriceRandomBasic
      types["bords"] = self.matriceRandom0
@@ -67,6 +69,7 @@ class MapGen:
       y += 1
 
     def cycle(self,duree):
+     self.initialise()
      while duree > 0:
       duree -= 1
       self.Division()
@@ -112,6 +115,7 @@ class MapGen:
       y += 1
      self.tab = aux
 
+
     def Moyenne(self,x,y):
      aux = []
      biome = Biome()
@@ -119,10 +123,9 @@ class MapGen:
      for elt in self.modele.hierarchie:
       biome.set(elt,0)
      for elt in self.tab[x,y].Voisins():
-      x1,y1 = elt
-      if (x1,y1) in self.tab: 
+      if elt in self.tab: 
        for elt1 in self.modele.hierarchie:
-        biome.add(elt1,self.tab[x1,y1].biome.dict[elt1])
+        biome.add(elt1,self.tab[elt].biome.dict[elt1])
        aux.append(elt)
        compteur = compteur + 1
      x1,y1 =  aux[randrange(compteur)]
@@ -162,12 +165,22 @@ class MapGen:
        case.biome.dict[elt] = i
       self.modele.determine(case.biome)
 
+    def fromImage(self,image,elt):
+     y = 0
+     while y < self.Y:
+      init = self.ligne(y)
+      x = init
+      while x < self.X + init:
+       self.tab[x,y].biome.dict[elt] = (image[x-init,y].r - 255) * -1
+       x += 1
+      y += 1
+
 def aff(w,Poney):
  for elt in Poney.tab.values():
   w.draw(elt.sprite())
  w.display()
 def cycle(t,d): 
- Poney = MapGen(2*d,d,[])
+ Poney = MapGen(d,d,[])
  Poney.cycle(t)
  i = 0
  return Poney
