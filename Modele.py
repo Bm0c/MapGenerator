@@ -54,6 +54,10 @@ class Biome:
      for key,value in biome.dict.items():
       self.dict[key] = value
 
+    def moy(self,biome):
+     for key,value in biome.dict.items():
+      self.dict[key] = (value + self.dict[key]) // 2
+
 class Make(Reader):
 
     def __init__(self,name):

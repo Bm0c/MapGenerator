@@ -26,100 +26,71 @@ class MapGen:
      return (y+1)//2
     
     def makeMatrice(self):
-     y = 0
-     while y < self.Y:
+     for y in range(0,self.Y):
       init = self.ligne(y)
-      x = init
-      while x < self.X + init:
+      for x in range(init,self.X + init):
        self.tab[x,y]= Case(x,y)
-       x += 1
-      y += 1
 
     def matriceRandomBasic(self,elt):
-     y = 0
-     while y < self.Y:
+     for y in range(0,self.Y):
       init = self.ligne(y)
-      x = init
-      while x < self.X + init:
+      for x in range(init,self.X + init):
        self.tab[x,y].biome.set(elt,randrange(self.MAXVALUE))
-       x += 1
-      y += 1
 
     def matriceRandom0(self,elt): #Bord à 0
-     y = 0
-     while y < self.Y:
+     for y in range(0,self.Y):
       init = self.ligne(y)
-      x = init
-      while x < self.X + init:
+      for x in range(init,self.X + init):
        if x == init or y == 0 or y == self.Y -1 or x == self.X + init -1:
         self.tab[x,y].biome.set(elt,0)
        else: 
         self.tab[x,y].biome.set(elt,randrange(self.MAXVALUE))
-       x += 1
-      y += 1
 
     def matriceProgressive(self,elt): #Progressive
-     y = 0
-     while y < self.Y:
+     for y in range(0,self.Y):
       init = self.ligne(y)
-      x = init
-      while x < self.X + init:
+      for x in range(init,self.X + init):
        self.tab[x,y].biome.set(elt,min((self.MAXVALUE * (y))//self.Y, (self.MAXVALUE * (self.Y - (1 + y)))//(self.Y)))
-       x += 1
-      y += 1
 
     def cycle(self,duree):
      self.initialise()
-     while duree > 0:
-      duree -= 1
+     for i in range(0,duree):
       self.Division()
       self.Egalisation()
      self.Finalisation()
 
     def Division(self,mod = 2):
      aux = {}
-     y = 0
-     while y < self.Y:
+     for y in range(0,self.Y):
       init = self.ligne(y)
-      x = init
       offset = 0
-      if x * 2 > y:
+      if init * 2 > y:
        offset = 1
-      while x < self.X + init:
-       y2 = 0
-       while y2 < mod:
+      for x in range(init, self.X + init):
+       for y2 in range(0,mod):
         init2 =  self.ligne(y2)
-        x2 = init2
-        while x2 < mod + init2:
+        for x2 in range(init2,mod + init2):
          aux[(x)*mod+x2 - offset, y*mod+y2] = Case((x)*mod+x2 -offset,y*mod+y2)
          aux[(x)*mod+x2 - offset, y*mod+y2].biome.copy(self.tab[x,y].biome)
-         x2 += 1
-        y2 += 1
-       x += 1
-      y += 1
      self.tab = aux
      self.Y *= 2
      self.X *= 2
 
     def Egalisation(self):
      aux = {}
-     y = 0
-     while y < self.Y:
+     for y in range(0,self.Y):
       init = self.ligne(y)
-      x = init
-      while x < self.X + init:
+      for x in range(init,self.X + init):
        biome = self.Moyenne(x,y)
        aux[x,y] = Case(x,y)
        aux[x,y].biome = biome
-       x += 1
-      y += 1
      self.tab = aux
 
 
     def Moyenne(self,x,y):
      aux = []
-     biome = Biome()
-     compteur = 0
+     biome = self.tab[x,y].biome
+     compteur = 1
      for elt in self.modele.hierarchie:
       biome.set(elt,0)
      for elt in self.tab[x,y].Voisins():
@@ -128,7 +99,7 @@ class MapGen:
         biome.add(elt1,self.tab[elt].biome.dict[elt1])
        aux.append(elt)
        compteur = compteur + 1
-     x1,y1 =  aux[randrange(compteur)]
+     x1,y1 =  aux[randrange(compteur - 1)]
      if compteur > 0:
       for elt in biome.dict.keys():
        biome.div(elt,compteur)
@@ -139,11 +110,9 @@ class MapGen:
     def Finalisation(self):
      aux = {}
      self.niveaux = {}
-     i = 0
-     while i < self.MAXVALUE:
+     for i in range(0,self.MAXVALUE):
       for elt in self.modele.hierarchie:
        aux[elt,i] = 0
-      i += 1
      for case in self.tab.values():
       for elt in self.modele.hierarchie:
        aux[elt,case.biome.dict[elt]] += 1
@@ -165,22 +134,12 @@ class MapGen:
        case.biome.dict[elt] = i
       self.modele.determine(case.biome)
 
-    def fromImage(self,image,elt):
-     y = 0
-     while y < self.Y:
-      init = self.ligne(y)
-      x = init
-      while x < self.X + init:
-       self.tab[x,y].biome.dict[elt] = (image[x-init,y].r - 255) * -1
-       x += 1
-      y += 1
-
 def aff(w,Poney):
  for elt in Poney.tab.values():
   w.draw(elt.sprite())
  w.display()
-def cycle(t,d): 
- Poney = MapGen(d,d,[])
+def cycle(t,l,h): 
+ Poney = MapGen(l,h,[])
  Poney.cycle(t)
  i = 0
  return Poney
