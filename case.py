@@ -13,7 +13,7 @@ class Case(hexagone):
      h = sf.CircleShape(self.L/2,6)
      h.position = self.getXY()
      h.fill_color = self.biome.color
-     h.outline_color = sf.Color(0,0,0,50)
+     h.outline_color = sf.Color(0,0,0,40)
      h.outline_thickness = -1
      return h
 

@@ -43,7 +43,7 @@ class Biome:
 
     def add(self,name,value):
      self.dict[name] += value
-    
+
     def set(self,name,value):
      self.dict[name] = value
 
@@ -54,9 +54,13 @@ class Biome:
      for key,value in biome.dict.items():
       self.dict[key] = value
 
-    def moy(self,biome):
+    def moyBiome(self,biome):
      for key,value in biome.dict.items():
-      self.dict[key] = (value + self.dict[key]) // 2
+      self.dict[key] = (self.dict[key] + value) // 2
+
+    def addBiome(self,biome):
+     for key,value in biome.dict.items():
+      self.dict[key] = biome.dict[key]
 
 class Make(Reader):
 
@@ -67,7 +71,7 @@ class Make(Reader):
     def makeNode(self):
      l = []
      line = self.getLine()
-     while line != None and line.split(" ")[0] != "end":
+     while line != None and not "end" in line:
       liste = line.split(":")
       if liste[1] == "COLOR":
        l.append(sf.Color(int(liste[2]),int(liste[3]),int(liste[4])))

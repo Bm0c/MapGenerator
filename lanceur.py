@@ -1,3 +1,4 @@
+import random
 import sfml as sf
 from GenMap import *
 from hexagone import *
@@ -13,16 +14,13 @@ def boucle(t,d):
   print(a.Y)
 
 def Generate(t,l,h,n):
- w = sf.RenderTexture(1,1)
- w.clear()
- i = 0
- while i < n:
+ for i in range(n):
   print("Working on {0}...".format(i))
   a = cycle(t,l,h)
-  w = sf.RenderTexture(hexagone.l * a.X + hexagone.l // 2,(hexagone.L * 1.5) * (a.Y // 2 + 1))#hexagone.l * X + hexagone.l * 0.5 / (hexagone.L * 1.5) *( Y / 2)
-  w.clear()
-  aff(w,a)
-  image = w.texture.to_image()
-  image.to_file("map{0}.png".format(i))
-  i+=1
+  a.save("map{0}.png".format(i))
 
+def GenerateI(nb,minX,minY,maxX,maxY):
+ for i in range(nb):
+  print(" -> Work on {0}".format(i))
+  map = GenerateMap(3,random.randint(minX,maxX),random.randint(minY,maxY),random.randint(2,6))
+  map.save("map{0}.png".format(i))
