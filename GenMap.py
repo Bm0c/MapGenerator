@@ -1,65 +1,168 @@
-import random
-from random import randrange
+from random import randrange,randint
 from case import Case
 from Modele import *
 from hexagone import *
 
-class MapGen:
+class Tableau:
+
+    def ligne(self,y):
+     return (y + 1) // 2
     
+    def iterB(self,decalage = 1):
+     for y in range(self.Y):
+      init = self.ligne(y)
+      for x in range(init,self.X + init):
+       if (x  >= init + decalage and  y >= decalage and  y < self.Y - decalage and x < self.X + init - decalage):
+         yield (x,y)
+
+    def iterC(self):
+     for y in range(self.Y):
+      init = self.ligne(y)
+      for x in range(init,self.X + init):
+        yield (x,y)
+
+    def iter(self,tab):
+     for y in range(self.Y):
+      init = self.ligne(y)
+      for x in range(init,self.X + init):
+        yield (x,y,tab[x,y])
+
+class Region(Tableau):
+
+    def __init__(self,largeur,hauteur,nb = 10):
+     self.X = largeur
+     self.Y = hauteur
+     self.tab  = {}
+     self.reg= []
+     self.liste = [ elt for elt in self.iterC() ]
+     for x,y in self.iterC():
+      self.tab[x,y] = Case(x,y)
+      self.tab[x,y].biome.color = sf.Color.WHITE
+     for i in range(nb):
+      elt = self.liste[randrange(len(self.liste))]
+      self.reg.append((elt,sf.Color(randrange(256),randrange(256),randrange(256))))
+     for key,elt in self.tab.items():
+      distance = self.X * self.Y
+      c = sf.Color.BLACK
+      for init,color in self.reg:
+       if elt.Distance(self.tab[init]) < distance:
+        c = color
+        distance = elt.Distance(self.tab[init])
+      elt.biome.color = c
+       
+
+    def getTexture(self):
+     w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
+     w.clear()
+     for elt in self.tab.values():
+      w.draw(elt.sprite())
+     w.display()
+     return w
+
+    def save(self,name):
+     w = self.getTexture()
+     image =  w.texture.to_image()
+     image.to_file(name)
+       
+
+
+
+class Seed(Tableau):
+
+    def __init__(self,largeur,hauteur,noeud = {"type" : "rand"},minValue = 0,maxValue = 255, value = 0):
+     self.function = {"rand" : self.rand, "degrade" : self.degrade, "islande" : self.islande }
+     self.maxValue = maxValue
+     self.minValue = minValue
+     self.X = largeur
+     self.Y = hauteur
+     self.tab = {}
+     if "args" in noeud:
+      self.function[noeud["type"]](noeud["args"])
+     else :
+      self.function[noeud["type"]]()
+
+    def degrade(self,args = {"direction":"Y","evolution":"increase"}):
+     if args["direction"] == "Y":
+      c = self.Y
+      current = lambda x,y : y
+     else:
+      c =  self.X 
+      current = lambda x,y : x - self.ligne(y) 
+     if args["evolution"] == "increase":
+      fun = lambda x,y : self.maxValue * current(x,y) // c
+     elif args["evolution"] == "decrease":
+      fun = lambda x,y : self.maxValue * (c - (1 + current(x,y))) // c
+     elif args["evolution"] == "center":
+      fun = lambda x,y : min(self.maxValue * current(x,y) // c,self.maxValue * (c - (1 + current(x,y))) //c) * 2
+     elif args["evolution"] == "border":
+      fun = lambda x,y : max(self.maxValue * current(x,y) // c,self.maxValue * (c - (1 + current(x,y))) //c) - ( self.maxValue // 2) * 2
+     for(x,y) in self.iterC():
+      self.tab[x,y] = Case(x,y)
+      self.tab[x,y].value = fun(x,y) 
+
+    def rand(self,args = {}):
+     for(x,y) in self.iterC():
+      self.tab[x,y] = Case(x,y)
+      self.tab[x,y].value = randint(self.minValue,self.maxValue) 
+
+    def islande(self,args = (5,[100,90,50,0])):
+     for x,y in self.iterC():
+      self.tab[x,y] = Case(x,y)
+      self.tab[x,y].value = self.minValue 
+     liste = [ elt for elt in self.iterB() ]
+     le = len(liste)
+     nb , li = args
+     sup = li[0] 
+     inf = li[1]
+     aux = []
+     for i in range(nb):
+      l = [ elt for elt in self.iterB(3) ]
+      elt = l[randrange(len(l))]
+      self.tab[elt].value = randint(inf  * self.maxValue  // 100, sup * self.maxValue // 100)
+      aux = aux + [ v for v in self.tab[elt].Voisins() if v in liste  ]
+      if elt in liste:
+       liste.remove(elt)
+      l.remove(elt)
+     current = nb
+     for inf_ in li[2:]:
+      sup = inf
+      inf = inf_ 
+      for i in range((sup - inf)  * le // 100) :
+        current = aux[randrange(len(aux))]
+        aux.remove(current)
+        if current in liste:
+         liste.remove(current)
+         self.tab[current].value = randint(inf *  self.maxValue //100,sup * self.maxValue // 100) 
+         aux = aux + [ elt for elt in self.tab[current].Voisins() if elt in liste  ]
+
+
+    def getTexture(self):
+     w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
+     w.clear()
+     for elt in self.tab.values():
+      elt.biome.setColor(sf.Color(elt.value,elt.value,elt.value))
+      w.draw(elt.sprite())
+     w.display()
+     return w
+
+    def save(self,name):
+     w = self.getTexture()
+     image =  w.texture.to_image()
+     image.to_file(name)
+
+class MapGen(Tableau):
 
     def __init__(self,largeur,hauteur,modele): #X,Y,Liste_Coeff
      self.X = largeur
      self.Y = hauteur
      self.MAXVALUE = 256
      self.tab = {}
-     a = Make("patron")
-     a.make()
-     self.modele = a.modele
-     self.makeMatrice()
-     self.initialise()
-
-    def initialise(self):
-     types = {}
-     types[""] = self.matriceRandomBasic
-     types["bords"] = self.matriceRandom0
-     types["lignes"] = self.matriceProgressive
-     for elt in self.modele.hierarchie:
-      types[self.modele.type[elt]](elt)
-      
-    def ligne (self,y): 
-     return (y+1)//2
-    
-    def makeMatrice(self):
-     for y in range(self.Y):
-      init = self.ligne(y)
-      for x in range(init,self.X + init):
-       self.tab[x,y]= Case(x,y)
-       for elt in self.modele.hierarchie:
-        self.tab[x,y].biome.set(elt,0)
-
-    def matriceRandomBasic(self,elt):
-     for y in range(self.Y):
-      init = self.ligne(y)
-      for x in range(init,self.X + init):
-       self.tab[x,y].biome.set(elt,randrange(self.MAXVALUE))
-
-    def matriceRandom0(self,elt): #Bord à 0
-     for y in range(self.Y):
-      init = self.ligne(y)
-      for x in range(init,self.X + init):
-       if x == init or y == 0 or y == self.Y -1 or x == self.X + init -1:
-        self.tab[x,y].biome.set(elt,0)
-       else: 
-        if randrange(2) == 1:
-         self.tab[x,y].biome.set(elt,randrange(self.MAXVALUE - 1))
-        else:
-         self.tab[x,y].biome.set(elt,0)
-
-    def matriceProgressive(self,elt): #Progressive
-     for y in range(self.Y):
-      init = self.ligne(y)
-      for x in range(init,self.X + init):
-       self.tab[x,y].biome.set(elt,min((self.MAXVALUE * (y))//self.Y, (self.MAXVALUE * (self.Y - (1 + y)))//(self.Y)))
+     self.modele = Modele("patron.xml")
+     self.seed = [ (key, Seed(self.X,self.Y,elt["seed"])) for key,elt in self.modele.racine["couche"].items() ]
+     for x,y in self.iterC():
+      self.tab[x,y] = Case(x,y)
+      for key,s in self.seed:
+       self.tab[x,y].biome.set(key,s.tab[x,y].value)
 
     def cycle(self,duree):
      for i in range(duree):
@@ -106,13 +209,17 @@ class MapGen:
        for elt1 in self.modele.hierarchie:
         biome.add(elt1,self.tab[elt].biome.dict[elt1])
        aux.append(elt)
-       compteur = compteur + 1
-     x1,y1 =  aux[randrange(compteur)]
+      compteur = compteur + 1
+     x1,y1 =  aux[randrange(len(aux))]
      if compteur > 0:
       for elt in biome.dict.keys():
-       biome.div(elt,compteur)
-       biome.add(elt,self.tab[x1,y1].biome.dict[elt])
-       biome.div(elt,2)
+       if compteur == 6:
+        biome.div(elt,compteur)
+        biome.add(elt,self.tab[x,y].biome.dict[elt])
+        biome.add(elt,self.tab[x1,y1].biome.dict[elt])
+        biome.div(elt,3)
+       else :
+        biome.set(elt,0)
      return biome
 
     def Finalisation(self):
@@ -165,20 +272,13 @@ class MapGen:
      for x,y in map.tab.keys():
       self.tab[i + x ,y+j].biome.moyBiome(map.tab[x,y].biome)
 
-def GenerateMap(n,x,y,nb):
+def GenerateMap(n,x,y):
  map = MapGen(x,y,42)
- for i in range(nb):
-  aux = MapGen(x//3,y//3,24)
-  map.addMap(aux,random.randrange(x-x//3),random.randrange(y-y//3))
  map.cycle(n)
  return map
 
-def aff(w,Poney):
- for elt in Poney.tab.values():
-  w.draw(elt.sprite())
- w.display()
-
-def cycle(t,l,h): 
- Poney = MapGen(l,h,[])
- Poney.cycle(t)
- return Poney
+def fun():
+ for i in range(100):
+  print("Test " + str(i))
+  s = Region(100,100,100)
+  s.save("Test{}.png".format(i))

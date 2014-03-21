@@ -1,30 +1,31 @@
 import sfml as sf
 from Reader import *
+import lecteur
 
 class Modele:
 
-    def __init__(self):
-     self.hierarchie = [] 
+    def __init__(self,file):
+     fichier = lecteur.Lecteur(file)
+     fichier.parse()
+     self.racine = fichier.racine
+     self.hierarchie = self.racine["liste"] 
      self.tab = {}
      self.pourcents = {}
-     self.type = {}
-    def addNode(self,name,node):
-     self.tab[name] = node
-
-    def addHierarchie(self,name):
-     self.hierarchie.append(name)
-
-    def addPourcent(self,name,liste):
-     self.pourcents[name] = liste
+     for key,elt in self.racine["couche"].items():
+      self.pourcents[key] = [int(value) for value in elt["pourcents"] ]
+      for var in elt["variation"].values():
+       var["niveau"] = [ (lambda s: '#' in s and sf.Color(int(word[1:3],16),int(word[3:5],16),int(word[5:7],16)) or word ) (word) for word in var["niveau"] ]
 
     def determine(self,biome):
      mot = self.word(biome.dict)
-     suffix = ""
+     suffix = "init"
      prefix, value = mot.pop(0)
-     while type(self.tab[prefix,suffix][value]) != sf.Color:
-      suffix = self.tab[prefix,suffix][value]
+     Couleur = self.racine["couche"][prefix]["variation"][suffix]["niveau"][value]
+     while type(Couleur) != sf.Color:
+      suffix = Couleur
       prefix, value = mot.pop(0)
-     biome.setColor(self.tab[prefix,suffix][value])
+      Couleur = self.racine["couche"][prefix]["variation"][suffix]["niveau"][value]
+     biome.setColor(Couleur)
 
     def word(self,dict):
      l = []
@@ -47,6 +48,9 @@ class Biome:
     def set(self,name,value):
      self.dict[name] = value
 
+    def mult(self,name,value):
+     self.dict[name] *= value
+
     def div(self,name,value):
      self.dict[name] //= value
 
@@ -56,55 +60,9 @@ class Biome:
 
     def moyBiome(self,biome):
      for key,value in biome.dict.items():
-      self.dict[key] = (self.dict[key] + value) // 2
+      self.add(key,value)
+      self.div(key,2)
 
     def addBiome(self,biome):
      for key,value in biome.dict.items():
-      self.dict[key] = biome.dict[key]
-
-class Make(Reader):
-
-    def __init__(self,name):
-     Reader.__init__(self,name)
-     self.modele = Modele()
-
-    def makeNode(self):
-     l = []
-     line = self.getLine()
-     while line != None and not "end" in line:
-      liste = line.split(":")
-      if liste[1] == "COLOR":
-       l.append(sf.Color(int(liste[2]),int(liste[3]),int(liste[4])))
-      else:
-       l.append(liste[1])
-      line = self.getLine()
-     return l
-
-    def makeLayer(self,line):
-     liste = line.split(":")
-     name = liste[0]
-     pourcents = []
-     self.modele.type[name] = ""
-     self.modele.addHierarchie(name)
-     for elt in liste[1].split(","):
-      pourcents.append(elt)
-     self.modele.addPourcent(name,pourcents)
-     line = self.getLine()
-     while line != None and line.split(" ")[0]  != "end":
-      liste = line.split(" ")
-      if liste[0] == "begin":
-       suffix = ""
-       if len(liste) > 1:
-        suffix = liste[1]
-       self.modele.addNode((name,suffix),self.makeNode())
-      elif "type" in line:       
-       self.modele.type[name] = line.split(":")[1]
-      line = self.getLine()
-
-    def make(self):
-     line = self.getLine()
-     while line != None:
-      liste = line.split(" ")
-      if liste[0] == "def":
-       self.makeLayer(liste[1])
-      line = self.getLine()
+      self.add(key,value)
