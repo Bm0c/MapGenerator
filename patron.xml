@@ -1,0 +1,42 @@
+<Modele>
+ <liste>Relief</liste>
+ <liste>Climat</liste>
+ <liste>Vegetation</liste>
+ <couche id="Relief">
+  <seed>
+   <type>islande</type>
+  </seed>
+  <pourcents>60,94,98,100</pourcents>
+  <variation id="init">
+   <niveau>#325DE0,Classic,#6A3805,#602E00</niveau>
+  </variation>
+ </couche>
+ <couche id="Climat">
+  <seed>
+   <type>degrade</type>
+   <args>
+    <direction>Y</direction>
+    <evolution>center</evolution>
+   </args>
+  </seed>
+  <pourcents>30,80,100</pourcents>
+  <variation id="Classic">
+   <niveau>#9DD6D4,Classic,#ADD247</niveau>
+  </variation>
+ </couche>
+ <couche id="Vegetation">
+  <seed>
+   <type>rand</type>
+  </seed>
+  <pourcents>70,90,100</pourcents>
+  <variation id="Classic">
+   <niveau>#027D01,#005000,#013A03</niveau>
+  </variation>
+  <variation id="Polaire">
+   <niveau>#027D01,#005000,#013A03</niveau>
+  </variation>
+  <variation id="Chaud">
+   <niveau>#027D01,#005000,#013A03</niveau>
+  </variation>
+ </couche>
+</Modele>
