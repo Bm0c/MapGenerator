@@ -1,10 +1,9 @@
 <Modele>
  <liste>Relief</liste>
- <liste>Climat</liste>
  <liste>Vegetation</liste>
  <couche id="Relief">
   <seed>
-   <type>islande</type>
+   <type>plaque</type>
   </seed>
   <pourcents>60,94,98,100</pourcents>
   <variation id="init">

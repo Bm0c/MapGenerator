@@ -2,6 +2,8 @@ from random import randrange,randint
 from case import Case
 from Modele import *
 from hexagone import *
+from tableau import Tableau
+from genRegion import GenRegion
 
 class Tableau:
 
@@ -69,8 +71,8 @@ class Region(Tableau):
 
 class Seed(Tableau):
 
-    def __init__(self,largeur,hauteur,noeud = {"type" : "rand"},minValue = 0,maxValue = 255, value = 0):
-     self.function = {"rand" : self.rand, "degrade" : self.degrade, "islande" : self.islande }
+    def __init__(self,largeur,hauteur,noeud = {"type" : "plaque"},minValue = 0,maxValue = 255, value = 0):
+     self.function = {"rand" : self.rand, "degrade" : self.degrade, "islande" : self.islande ,"plaque" : self.plaque}
      self.maxValue = maxValue
      self.minValue = minValue
      self.X = largeur
@@ -105,7 +107,7 @@ class Seed(Tableau):
       self.tab[x,y] = Case(x,y)
       self.tab[x,y].value = randint(self.minValue,self.maxValue) 
 
-    def islande(self,args = (5,[100,90,50,0])):
+    def islande(self,args = (2,[100,95,80,60,0])):
      for x,y in self.iterC():
       self.tab[x,y] = Case(x,y)
       self.tab[x,y].value = self.minValue 
@@ -116,7 +118,7 @@ class Seed(Tableau):
      inf = li[1]
      aux = []
      for i in range(nb):
-      l = [ elt for elt in self.iterB(3) ]
+      l = [ elt for elt in self.iterB(1) ]
       elt = l[randrange(len(l))]
       self.tab[elt].value = randint(inf  * self.maxValue  // 100, sup * self.maxValue // 100)
       aux = aux + [ v for v in self.tab[elt].Voisins() if v in liste  ]
@@ -128,13 +130,32 @@ class Seed(Tableau):
       sup = inf
       inf = inf_ 
       for i in range((sup - inf)  * le // 100) :
+       for y in range(10):
         current = aux[randrange(len(aux))]
         aux.remove(current)
         if current in liste:
          liste.remove(current)
          self.tab[current].value = randint(inf *  self.maxValue //100,sup * self.maxValue // 100) 
          aux = aux + [ elt for elt in self.tab[current].Voisins() if elt in liste  ]
+         break
 
+    def plaque(self,args = (5,8)):
+     for x,y in self.iterC():
+      self.tab[x,y] = Case(x,y)
+      self.tab[x,y].value = randrange(self.minValue , (self.minValue + self.maxValue // 2) )
+     liste = [ elt for elt in self.iterB() ]
+     le = len(liste)
+     nb , plaque = args
+     plaques = GenRegion(self.X,self.Y, nb = plaque)
+     liste_plaque = [ (elt.interieur,elt.frontiere) for elt in plaques.regions]
+     for i in range(nb):
+      li,lf = liste_plaque[randrange(len(liste_plaque))]
+      liste_plaque.remove((li,lf))
+      l = [ (elt.u,elt.v)  for elt in li if (elt.u,elt.v) in liste]
+      if randrange(2):
+       l += [ (elt.u,elt.v)  for elt in lf if (elt.u,elt.v) in liste]
+      for elt in l:
+       self.tab[elt].value = randint((self.minValue + self.maxValue) // 2 , self.maxValue )
 
     def getTexture(self):
      w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
@@ -280,5 +301,5 @@ def GenerateMap(n,x,y):
 def fun():
  for i in range(100):
   print("Test " + str(i))
-  s = Region(100,100,100)
+  s = Seed(10,10)
   s.save("Test{}.png".format(i))
