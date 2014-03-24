@@ -19,7 +19,7 @@ class hexagone:
      return d6
 
     def Voisins(self):
-     return [(self.u + 1,self.v),(self.u + 1,self.v + 1),(self.u,self.v+1),(self.u -1,self.v),(self.u -1,self.v - 1),(self.u,self.v - 1)]
+     return [(self.u,self.v - 1),(self.u + 1,self.v),(self.u + 1,self.v + 1),(self.u,self.v+1),(self.u -1,self.v),(self.u -1,self.v - 1)]
 
     def getXY(self):
      x = hexagone.l * self.u - (hexagone.l/2) * self.v

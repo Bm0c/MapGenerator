@@ -139,23 +139,21 @@ class Seed(Tableau):
          aux = aux + [ elt for elt in self.tab[current].Voisins() if elt in liste  ]
          break
 
-    def plaque(self,args = (5,8)):
+    def plaque(self,args = {"nombre" : 5, "plaques" : 8}):
      for x,y in self.iterC():
       self.tab[x,y] = Case(x,y)
-      self.tab[x,y].value = randrange(self.minValue , (self.minValue + self.maxValue // 2) )
-     liste = [ elt for elt in self.iterB() ]
-     le = len(liste)
-     nb , plaque = args
+      self.tab[x,y].value = 0 #randrange(self.minValue , (self.minValue + self.maxValue // 2) )
+     liste = [ elt for elt in self.iterB(2) ]
+     nombre = int(args["nombre"])
+     plaque = int(args["plaques"])
      plaques = GenRegion(self.X,self.Y, nb = plaque)
      liste_plaque = [ (elt.interieur,elt.frontiere) for elt in plaques.regions]
-     for i in range(nb):
+     for i in range(nombre):
       li,lf = liste_plaque[randrange(len(liste_plaque))]
       liste_plaque.remove((li,lf))
       l = [ (elt.u,elt.v)  for elt in li if (elt.u,elt.v) in liste]
-      if randrange(2):
-       l += [ (elt.u,elt.v)  for elt in lf if (elt.u,elt.v) in liste]
       for elt in l:
-       self.tab[elt].value = randint((self.minValue + self.maxValue) // 2 , self.maxValue )
+       self.tab[elt].value = randint((self.minValue + self.maxValue)  // 2 , self.maxValue )
 
     def getTexture(self):
      w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
@@ -234,13 +232,10 @@ class MapGen(Tableau):
      x1,y1 =  aux[randrange(len(aux))]
      if compteur > 0:
       for elt in biome.dict.keys():
-       if compteur == 6:
         biome.div(elt,compteur)
         biome.add(elt,self.tab[x,y].biome.dict[elt])
         biome.add(elt,self.tab[x1,y1].biome.dict[elt])
         biome.div(elt,3)
-       else :
-        biome.set(elt,0)
      return biome
 
     def Finalisation(self):

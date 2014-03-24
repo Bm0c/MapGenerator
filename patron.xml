@@ -4,8 +4,12 @@
  <couche id="Relief">
   <seed>
    <type>plaque</type>
+   <args>
+    <nombre>4</nombre>
+    <plaques>6</plaques>
+   </args>
   </seed>
-  <pourcents>60,94,98,100</pourcents>
+  <pourcents>70,94,98,100</pourcents>
   <variation id="init">
    <niveau>#325DE0,Classic,#6A3805,#602E00</niveau>
   </variation>

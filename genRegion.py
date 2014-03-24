@@ -13,11 +13,11 @@ class Region:
 
     def addFro(self,case):
      self.frontiere.append(case)
-     case.value = self.Color
+     case.region = self
 
     def addInt(self,case):
      self.interieur.append(case)
-     case.value = self.Color
+     case.region = self
 
 class GenRegion(Tableau):
 
@@ -46,24 +46,23 @@ class GenRegion(Tableau):
       case.value = id
       voisins = [self.tab[elt] for elt in case.Voisins() if elt in self.tab and self.tab[elt].value != -1 and self.tab[elt].value != id]
       if len(voisins):
-       self.regions[id].frontiere.append(case)
+       self.regions[id].addFro(case)
        for elt in voisins:
         if elt in self.regions[id].interieur:
          self.regions[id].interieur.remove(elt)
-         self.regions[id].frontiere.append(elt)
+         self.regions[id].addFro(elt)
       else:
-       self.regions[id].interieur.append(case)
+       self.regions[id].addInt(case)
        
 
     def getTexture(self):
       w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
       w.clear()
       for region in self.regions:
-        region.Color = sf.Color(randrange(256),randrange(256),randrange(256))
+       region.Color = sf.Color(randrange(256),randrange(256),randrange(256))
       for elt in self.tab.values():
-       elt.biome.setColor(self.regions[elt.value].Color)
-       if  elt in self.regions[elt.value].interieur:
-        w.draw(elt.sprite())
+       elt.setFrontiere(self.tab)
+       w.draw(elt.drawFrontiere())
       w.display()
       return w
  
@@ -75,5 +74,5 @@ class GenRegion(Tableau):
 def fun():
  for i in range(100):
   print("Test " + str(i))
-  s = GenRegion(10,10,6)
+  s = GenRegion(30,30,10)
   s.save("Test{}.png".format(i))
