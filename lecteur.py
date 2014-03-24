@@ -1,3 +1,4 @@
+from sfml import Color
 from xml.dom import minidom
 
 class Lecteur:
@@ -11,6 +12,8 @@ class Lecteur:
       return [self._parseStr(elt) for elt in string.split(",")]
      elif "int" in string:
       return int(string.split(":")[1])
+     elif "#" in string:
+      return Color(int(string[1:3],16),int(string[3:5],16),int(string[5:7],16))
      else :
       return string
 
@@ -40,7 +43,7 @@ class Lecteur:
       return aux  
 
     def _clean(self,node):
-     if type(node) != type(""):
+     if type(node) != type("") and type(node) != type(int) and type(node) != type(Color.BLACK):
       for key,elt in node.items():
        for element in elt.values():
         if type(element) == type([]):

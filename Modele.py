@@ -13,18 +13,19 @@ class Modele:
      self.pourcents = {}
      for key,elt in self.racine["couche"].items():
       self.pourcents[key] = [int(value) for value in elt["pourcents"] ]
-      for var in elt["variation"].values():
-       var["niveau"] = [ (lambda s: '#' in s and sf.Color(int(word[1:3],16),int(word[3:5],16),int(word[5:7],16)) or word ) (word) for word in var["niveau"] ]
 
     def determine(self,biome):
      mot = self.word(biome.dict)
      suffix = "init"
      prefix, value = mot.pop(0)
      Couleur = self.racine["couche"][prefix]["variation"][suffix]["niveau"][value]
-     while type(Couleur) != sf.Color:
+     while type(Couleur) != sf.Color and not "def" in Couleur:
       suffix = Couleur
       prefix, value = mot.pop(0)
       Couleur = self.racine["couche"][prefix]["variation"][suffix]["niveau"][value]
+     biome.walkable = not  "walkable" in self.racine["def"][Couleur]
+     if type(Couleur) != sf.Color:
+      Couleur = self.racine["def"][Couleur]["color"]
      biome.setColor(Couleur)
 
     def word(self,dict):

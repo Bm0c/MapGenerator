@@ -3,7 +3,7 @@ from case import Case
 from Modele import *
 from hexagone import *
 from tableau import Tableau
-from genRegion import GenRegion
+from genRegion import GenRegionVoronoi
 
 class Tableau:
 
@@ -146,7 +146,7 @@ class Seed(Tableau):
      liste = [ elt for elt in self.iterB(2) ]
      nombre = int(args["nombre"])
      plaque = int(args["plaques"])
-     plaques = GenRegion(self.X,self.Y, nb = plaque)
+     plaques = GenRegionVoronoi(self.X,self.Y, nb = plaque)
      liste_plaque = [ (elt.interieur,elt.frontiere) for elt in plaques.regions]
      for i in range(nombre):
       li,lf = liste_plaque[randrange(len(liste_plaque))]

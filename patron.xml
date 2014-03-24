@@ -5,13 +5,13 @@
   <seed>
    <type>plaque</type>
    <args>
-    <nombre>4</nombre>
-    <plaques>6</plaques>
+    <nombre>5</nombre>
+    <plaques>5</plaques>
    </args>
   </seed>
   <pourcents>70,94,98,100</pourcents>
   <variation id="init">
-   <niveau>#325DE0,Classic,#6A3805,#602E00</niveau>
+   <niveau>defMer,Classic,defMontagne,defPic</niveau>
   </variation>
  </couche>
  <couche id="Climat">
@@ -24,7 +24,7 @@
   </seed>
   <pourcents>30,80,100</pourcents>
   <variation id="Classic">
-   <niveau>#9DD6D4,Classic,#ADD247</niveau>
+   <niveau>defNeige,Classic,defDesert</niveau>
   </variation>
  </couche>
  <couche id="Vegetation">
@@ -33,13 +33,42 @@
   </seed>
   <pourcents>70,90,100</pourcents>
   <variation id="Classic">
-   <niveau>#027D01,#005000,#013A03</niveau>
+   <niveau>defPlaine,defForet,defProfonde</niveau>
   </variation>
   <variation id="Polaire">
-   <niveau>#027D01,#005000,#013A03</niveau>
+   <niveau>defPlaine,defForet,defProfonde</niveau>
   </variation>
   <variation id="Chaud">
-   <niveau>#027D01,#005000,#013A03</niveau>
+   <niveau>defPlaine,defForet,defProfonde</niveau>
   </variation>
  </couche>
+ <def>
+  <defMer>
+   <color>#325DE0</color>
+   <walkable>no</walkable>
+  </defMer>
+  <defMontagne>
+   <color>#6A3805</color>
+   <walkable>no</walkable>
+  </defMontagne>
+  <defPic>
+   <color>#602E00</color>
+   <walkable>no</walkable>
+  </defPic>
+  <defNeige>
+   <color>#9DD6D4</color>
+  </defNeige>
+  <defDesert>
+   <color>#ADD247</color>
+  </defDesert>
+  <defPlaine>
+   <color>#027D01</color>
+  </defPlaine>
+  <defForet>
+   <color>#005000</color>
+  </defForet>
+  <defProfonde>
+   <color>#013A03</color>
+  </defProfonde>
+ </def>
 </Modele>
