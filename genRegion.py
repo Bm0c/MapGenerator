@@ -90,14 +90,14 @@ class GenRegionPasse(GenRegion):
       self.regions.append(Region(nb,interieur = [case]))
       self.regions[i].voisins =  [ key for key in case.Voisins() if key in liste ]
      changement = True
-     while len(liste) and changement:
+     while changement:
       changement = False
       for region in self.regions:
        i = 0
        while len(region.voisins) and i < passe :
-        changement = True
         x,y = region.voisins.pop(randrange(len(region.voisins)))
-        if (x,y) in liste :
+        if (x,y) in tab and tab[x,y].biome.walkable and tab[x,y].region == None :
+         changement = True
          liste.remove((x,y))
          region.voisins.extend([elt for elt in tab[x,y].Voisins()])
          i += 1
