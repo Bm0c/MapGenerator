@@ -79,7 +79,7 @@ class GenRegionVoronoi(GenRegion,Tableau):
 
 class GenRegionPasse(GenRegion):
 
-    def __init__(self,tab,liste,largeur,hauteur,nb = 10, passe = 5):
+    def __init__(self,tab,liste,largeur,hauteur,nb = 30, passe = 50):
      self.tab = {}
      GenRegion.__init__(self,largeur,hauteur,nb)
      self.tab = tab
@@ -87,28 +87,21 @@ class GenRegionPasse(GenRegion):
      for i in range(nb):
       case = self.tab[self.liste[randrange(len(self.liste))]]
       case.value = i
-      self.regions.append(Region(nb,frontiere = [case]))
+      self.regions.append(Region(nb,interieur = [case]))
+      self.regions[i].voisins =  [ key for key in case.Voisins() if key in liste ]
      changement = True
      while len(liste) and changement:
       changement = False
       for region in self.regions:
-       voisins = []
-       for elt in region.frontiere:
-        v = [ key for key in elt.Voisins() if key in liste ]
-        if len(v):
-         voisins += v
-        else :
-         region.frontiere.remove(elt)
-         region.interieur.append(elt)
        i = 0
-       while len(voisins) and len (liste) and i < passe :
+       while len(region.voisins) and i < passe :
         changement = True
-        x,y = voisins[randrange(len(voisins))]
-        while(x,y) in voisins:
-         voisins.remove((x,y))
-        liste.remove((x,y))
-        region.addFro(self.tab[x,y])
-        i += 1
+        x,y = region.voisins.pop(randrange(len(region.voisins)))
+        if (x,y) in liste :
+         liste.remove((x,y))
+         region.voisins.extend([elt for elt in tab[x,y].Voisins()])
+         i += 1
+         region.addInt(tab[x,y])
 
     def getTexture(self):
       w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
