@@ -3,36 +3,21 @@ from tableau import Tableau
 from case import Case
 from random import randrange
 from hexagone import hexagone
+from region import Region
 
-class Region:
-
-    def __init__(self,Color,frontiere = [],interieur = []):
-     self.frontiere = frontiere
-     self.interieur = interieur
-     self.Color = Color
-
-    def addFro(self,case):
-     self.frontiere.append(case)
-     case.region = self
-
-    def addInt(self,case):
-     self.interieur.append(case)
-     case.region = self
-
-class GenRegion(Tableau):
+class GenRegion:
 
     def __init__(self,largeur,hauteur, nb = 10):
      self.X = largeur
      self.Y = hauteur
      self.regions = []
-     for x,y in self.iterC():
-      self.tab[x,y] = Case(x,y)
-      self.tab[x,y].value = -1
-       
 
-    def getTexture(self):
+    def getSurface(self):
       w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
       w.clear()
+      return w
+
+    def getTexture(self,w):
       for region in self.regions:
        region.Color = sf.Color(randrange(256),randrange(256),randrange(256),255)
       for elt in self.tab.values():
@@ -46,13 +31,16 @@ class GenRegion(Tableau):
       image =  w.texture.to_image()
       image.to_file(name)
 
-class GenRegionVoronoi(GenRegion,Tableau):
+class GenRegionVoronoi(GenRegion):
 
     def __init__(self,largeur,hauteur, nb = 10):
-     self.tab = {}
-     GenRegion.__init__(self,largeur,hauteur,nb)
+     GenRegion.__init__(self,largeur,hauteur)
+     self.tab = Tableau(self.X,self.Y)
+     for x,y in self.tab.iterC():
+      self.tab[x,y] = Case(x,y)
+      self.tab[x,y].value = -1
      self.init = []
-     self.liste = [elt for elt in self.iterB() ]
+     self.liste = [elt for elt in self.tab.iterB() ]
      for i in range(nb):
       case = self.tab[self.liste[randrange(len(self.liste))]]
       case.value = i
@@ -76,11 +64,9 @@ class GenRegionVoronoi(GenRegion,Tableau):
       else:
        self.regions[id].addInt(case)
 
-
 class GenRegionPasse(GenRegion):
 
-    def __init__(self,tab,liste,largeur,hauteur,nb = 30, passe = 50):
-     self.tab = {}
+    def __init__(self,tab,liste,largeur,hauteur,nb = 10, passe = 20):
      GenRegion.__init__(self,largeur,hauteur,nb)
      self.tab = tab
      self.liste = liste
@@ -91,7 +77,7 @@ class GenRegionPasse(GenRegion):
       self.regions[i].voisins =  [ key for key in case.Voisins() if key in liste ]
      changement = True
      while changement:
-      changement = False
+      changement = not changement
       for region in self.regions:
        i = 0
        while len(region.voisins) and i < passe :
@@ -103,16 +89,16 @@ class GenRegionPasse(GenRegion):
          i += 1
          region.addInt(tab[x,y])
 
-    def getTexture(self):
-      w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
-      w.clear()
-      for region in self.regions:
-       region.Color = sf.Color(randrange(256),randrange(256),randrange(256),80)
-      for elt in self.tab.values():
-       w.draw(elt.sprite())
+    def finalisation(self):
       for elt in self.tab.values():
        elt.setFrontiere(self.tab)
-       w.draw(elt.drawRegion())
-       w.draw(elt.drawFrontiere())
+
+    def getTexture(self,w):
+      for region in self.regions:
+       region.Color = sf.Color(randrange(256),randrange(256),randrange(256),80)
+      th = lambda x,y : w.draw(self.tab[x,y].sprite())
+      self.tab.iter(th)
+      th = lambda x,y : w.draw(self.tab[x,y].drawFrontiere())
+      self.tab.iter(th)
       w.display()
       return w

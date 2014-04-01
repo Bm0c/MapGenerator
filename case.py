@@ -4,11 +4,12 @@ from Modele import Biome
 
 class Case(hexagone):
 
-    def __init__(self,u,v,region = None):
+    def __init__(self,u,v,region = None,continent = False):
      self.u = u
      self.v = v
      self.biome = Biome()
      self.region = region
+     self.continent = continent
      self.frontiere = []
 
     def _hexa(self):
@@ -53,6 +54,3 @@ class Case(hexagone):
 
     def setFrontiere(self,tab):
      self.frontiere = [ i for i,elt in enumerate(self.Voisins()) if ( elt in tab and self.region != tab[elt].region ) or ( not elt in tab ) ]
-      
-
-
