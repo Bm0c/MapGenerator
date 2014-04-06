@@ -5,8 +5,8 @@
   <seed>
    <type>plaque</type>
    <args>
-    <nombre>5</nombre>
-    <plaques>5</plaques>
+    <nombre>4</nombre>
+    <plaques>4</plaques>
    </args>
   </seed>
   <pourcents>70,94,98,100</pourcents>
