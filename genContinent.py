@@ -4,24 +4,21 @@ from genRegion import GenRegionPasse
 from random import randrange
 import sfml as sf 
 
-class GenContinents(Tableau):
+class GenContinents:
 
-    def __init__(self,tab,largeur,hauteur):
-     self.X = largeur
-     self.Y = hauteur
-     self.hauteur = hauteur
+    def __init__(self,tab):
      self.tab = tab
      self.continents = []
-     self.iter(self._makeContinent)
+     self.tab.iter(self._makeContinent)
 
     def getTexture(self,w):
      for cont in self.continents:
       for region in cont.regions:
         region.Color = sf.Color(randrange(256),randrange(256),randrange(256),80)
      th = lambda x,y : w.draw(self.tab[x,y].sprite())
-     self.iter(th) 
+     self.tab.iter(th) 
      th = lambda x,y : w.draw(self.tab[x,y].drawFrontiere())
-     self.iter(th)
+     self.tab.iter(th)
      w.display()
 
     def _makeContinent(self,x,y):
@@ -36,7 +33,6 @@ class GenContinents(Tableau):
        self.tab[elt].continent = True
        cases.append(elt)
        voisins.extend(self.tab[elt].Voisins())
-     regions = GenRegionPasse(self.tab,cases,self.X,self.Y,3)
-     regions.finalisation
-     print(regions.liste)
-     self.continents.append(Continent(regions.liste))
+     regions = GenRegionPasse(self.tab,cases,3)
+     regions.finalisation()
+     self.continents.append(Continent(regions.regions))

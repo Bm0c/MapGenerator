@@ -7,9 +7,7 @@ from region import Region
 
 class GenRegion:
 
-    def __init__(self,largeur,hauteur, nb = 10):
-     self.X = largeur
-     self.Y = hauteur
+    def __init__(self, nb = 10):
      self.regions = []
 
     def getSurface(self):
@@ -34,8 +32,8 @@ class GenRegion:
 class GenRegionVoronoi(GenRegion):
 
     def __init__(self,largeur,hauteur, nb = 10):
-     GenRegion.__init__(self,largeur,hauteur)
-     self.tab = Tableau(self.X,self.Y)
+     GenRegion.__init__(self,nb)
+     self.tab = Tableau(largeur,hauteur)
      for x,y in self.tab.iterC():
       self.tab[x,y] = Case(x,y)
       self.tab[x,y].value = -1
@@ -47,7 +45,7 @@ class GenRegionVoronoi(GenRegion):
       self.init.append(case) 
       self.regions.append(Region(nb,interieur = [case]))
      for case in self.tab.values():
-      distance = self.X * self.Y
+      distance = self.tab.X * self.tab.Y
       id = -1
       for init in self.init:
        if case.Distance(init) < distance:
@@ -66,8 +64,8 @@ class GenRegionVoronoi(GenRegion):
 
 class GenRegionPasse(GenRegion):
 
-    def __init__(self,tab,liste,largeur,hauteur,nb = 10, passe = 20):
-     GenRegion.__init__(self,largeur,hauteur,nb)
+    def __init__(self,tab,liste,nb = 10, passe = 20):
+     GenRegion.__init__(self,nb)
      self.tab = tab
      self.liste = liste
      for i in range(nb):
@@ -90,12 +88,12 @@ class GenRegionPasse(GenRegion):
          region.addInt(tab[x,y])
 
     def finalisation(self):
+      for region in self.regions:
+       region.Color = sf.Color(randrange(256),randrange(256),randrange(256),80)
       for elt in self.tab.values():
        elt.setFrontiere(self.tab)
 
     def getTexture(self,w):
-      for region in self.regions:
-       region.Color = sf.Color(randrange(256),randrange(256),randrange(256),80)
       th = lambda x,y : w.draw(self.tab[x,y].sprite())
       self.tab.iter(th)
       th = lambda x,y : w.draw(self.tab[x,y].drawFrontiere())

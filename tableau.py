@@ -1,6 +1,7 @@
 import threading
 from hexagone import hexagone
 from case import Case
+import sfml as sf
 
 class Tableau:
  
@@ -57,4 +58,8 @@ class Tableau:
       image = w.texture.to_image()
       image.to_file(name)
 
-     
+     def getSurface(self):
+      w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
+      w.clear()
+      return w
+

@@ -82,20 +82,11 @@ class Seed:
      liste = [ elt for elt in self.tab.iterB(2) ]
      nombre = int(args["nombre"])
      plaque = int(args["plaques"])
-     plaques = GenRegionVoronoi(self.X,self.Y, nb = plaque)
+     plaques = GenRegionVoronoi(self.tab.X,self.tab.Y,nb = plaque)
      liste_plaque = [ (elt.interieur,elt.frontiere) for elt in plaques.regions]
      for i in range(nombre):
       li,lf = liste_plaque[randrange(len(liste_plaque))]
       liste_plaque.remove((li,lf))
       l = [ (elt.u,elt.v)  for elt in li if (elt.u,elt.v) in liste]
       for elt in l:
-       self.tab[elt].value = randint((self.minValue + self.maxValue)  // 2 , self.maxValue )
-
-    def getTexture(self):
-     w = sf.RenderTexture(hexagone.l * self.X + hexagone.l // 2,(hexagone.L * 1.5) * (self.Y // 2 + 1))
-     w.clear()
-     for elt in self.tab.values():
-      elt.biome.setColor(sf.Color(elt.value,elt.value,elt.value))
-      w.draw(elt.sprite())
-     w.display()
-     return w
+       self.tab[elt].value = randint((self.minValue + self.maxValue)  * 3 // 4 , self.maxValue )
