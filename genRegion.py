@@ -64,15 +64,18 @@ class GenRegionVoronoi(GenRegion):
 
 class GenRegionPasse(GenRegion):
 
-    def __init__(self,tab,liste,nb = 10, passe = 20):
+    def __init__(self,tab,liste = None ,nb = 10, passe = 20):
      GenRegion.__init__(self,nb)
      self.tab = tab
-     self.liste = liste
+     if liste == None:
+      self.liste = list(tab.tab)
+     else:
+      self.liste = liste
      for i in range(nb):
       case = self.tab[self.liste[randrange(len(self.liste))]]
       case.value = i
       self.regions.append(Region(nb,interieur = [case]))
-      self.regions[i].voisins =  [ key for key in case.Voisins() if key in liste ]
+      self.regions[i].voisins =  [ key for key in case.Voisins() if key in self.liste ]
      changement = True
      while changement:
       changement = not changement
@@ -82,7 +85,7 @@ class GenRegionPasse(GenRegion):
         x,y = region.voisins.pop(randrange(len(region.voisins)))
         if (x,y) in tab and tab[x,y].biome.walkable and tab[x,y].region == None :
          changement = True
-         liste.remove((x,y))
+         self.liste.remove((x,y))
          region.voisins.extend([elt for elt in tab[x,y].Voisins()])
          i += 1
          region.addInt(tab[x,y])
@@ -90,8 +93,15 @@ class GenRegionPasse(GenRegion):
     def finalisation(self):
       for region in self.regions:
        region.Color = sf.Color(randrange(256),randrange(256),randrange(256),80)
-      for elt in self.tab.values():
-       elt.setFrontiere(self.tab)
+       inte,frot = [],[]
+       for elt in region.interieur:
+        elt.setFrontiere(self.tab)
+        if len(elt.frontiere):
+         frot.append(elt)
+        else:
+         inte.append(elt)
+       region.interieur = inte
+       region.frontieres = frot
 
     def getTexture(self,w):
       th = lambda x,y : w.draw(self.tab[x,y].sprite())

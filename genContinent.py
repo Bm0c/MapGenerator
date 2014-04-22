@@ -22,7 +22,7 @@ class GenContinents:
      w.display()
 
     def _makeContinent(self,x,y):
-     if not ( self.tab[x,y].biome.walkable and self.tab[x,y].region == None ):
+     if (not self.tab[x,y].biome.walkable) and self.tab[x,y].region == None:
       return
      cases = [ (x,y) ]
      self.tab[x,y].continent = True

@@ -3,7 +3,7 @@ from case import Case
 from Modele import *
 from hexagone import *
 from tableau import Tableau
-from genRegion import GenRegionVoronoi
+from genRegion import GenRegionVoronoi,GenRegionPasse
 
 class Seed:
 
@@ -79,14 +79,15 @@ class Seed:
      for x,y in self.tab.iterC():
       self.tab[x,y] = Case(x,y)
       self.tab[x,y].value = 0 #randrange(self.minValue , (self.minValue + self.maxValue // 2) )
-     liste = [ elt for elt in self.tab.iterB(2) ]
+     liste = [ elt for elt in self.tab.iterB(1) ]
      nombre = int(args["nombre"])
      plaque = int(args["plaques"])
-     plaques = GenRegionVoronoi(self.tab.X,self.tab.Y,nb = plaque)
+     #plaques = GenRegionVoronoi(self.tab.X,self.tab.Y,nb = plaque)
+     plaques = GenRegionPasse(self.tab,None,plaque,5)
+     plaques.finalisation()
      liste_plaque = [ (elt.interieur,elt.frontiere) for elt in plaques.regions]
      for i in range(nombre):
       li,lf = liste_plaque[randrange(len(liste_plaque))]
       liste_plaque.remove((li,lf))
-      l = [ (elt.u,elt.v)  for elt in li if (elt.u,elt.v) in liste]
-      for elt in l:
+      for elt in [ (elt.u,elt.v)  for elt in li if (elt.u,elt.v) in liste]:
        self.tab[elt].value = randint((self.minValue + self.maxValue)  * 3 // 4 , self.maxValue )

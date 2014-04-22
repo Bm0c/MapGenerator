@@ -6,8 +6,8 @@ class Monde:
 
     def __init__(self,initX,initY,modele = "patron.xml",cycle = 2):
      self.modele = Modele(modele)
-     map = MapGen(initX,initY,modele)
      print("Generating map")
+     map = MapGen(initX,initY,modele)
      map.cycle(cycle)
      self.tab = map.tab
      print("Generating cont")

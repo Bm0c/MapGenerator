@@ -5,11 +5,11 @@
   <seed>
    <type>plaque</type>
    <args>
-    <nombre>4</nombre>
-    <plaques>4</plaques>
+    <nombre>3</nombre>
+    <plaques>3</plaques>
    </args>
   </seed>
-  <pourcents>70,94,98,100</pourcents>
+  <pourcents>60,94,98,100</pourcents>
   <variation id="init">
    <niveau>defMer,Classic,defMontagne,defPic</niveau>
   </variation>
@@ -22,7 +22,7 @@
     <evolution>center</evolution>
    </args>
   </seed>
-  <pourcents>30,80,100</pourcents>
+  <pourcents>60,80,100</pourcents>
   <variation id="Classic">
    <niveau>defNeige,Classic,defDesert</niveau>
   </variation>

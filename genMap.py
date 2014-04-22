@@ -115,8 +115,3 @@ class MapGen():
      w = self.getTexture()
      image =  w.texture.to_image()
      image.to_file(name)
-    
-def GenerateMap(n,x,y):
- map = MapGen(x,y,42)
- map.cycle(n)
- return map

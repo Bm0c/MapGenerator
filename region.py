@@ -1,7 +1,7 @@
 class Region:
 
     def __init__(self,Color,frontiere = [],interieur = [],continent = None):
-     self.frontiere = frontiere
+     self.frontiere = []
      self.interieur = interieur
      self.Color = Color
      self.continent = continent

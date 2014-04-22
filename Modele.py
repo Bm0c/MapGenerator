@@ -23,7 +23,8 @@ class Modele:
       suffix = Couleur
       prefix, value = mot.pop(0)
       Couleur = self.racine["couche"][prefix]["variation"][suffix]["niveau"][value]
-     biome.walkable = not  "walkable" in self.racine["def"][Couleur]
+     if "walkable" in self.racine["def"][Couleur]:
+      biome.walkable = self.racine["def"][Couleur]["walkable"] == "yes"
      if type(Couleur) != sf.Color:
       Couleur = self.racine["def"][Couleur]["color"]
      biome.setColor(Couleur)
@@ -39,6 +40,7 @@ class Biome:
     def __init__(self):
      self.dict = {} 
      self.color = sf.Color.WHITE
+     self.walkable = True
 
     def setColor(self,color):
      self.color = color
