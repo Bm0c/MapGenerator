@@ -5,10 +5,15 @@
   <seed>
    <type>plaque</type>
    <args>
-    <nombre>3</nombre>
-    <plaques>3</plaques>
+    <nombre>int:2</nombre>
+    <plaques>int:2</plaques>
    </args>
   </seed>
+  <random>
+   <moyenne>int:1</moyenne>
+   <centre>int:1</centre>
+   <rand>int:1</rand>
+  </random>
   <pourcents>60,94,98,100</pourcents>
   <variation id="init">
    <niveau>defMer,Classic,defMontagne,defPic</niveau>
@@ -31,6 +36,11 @@
   <seed>
    <type>rand</type>
   </seed>
+  <random>
+   <moyenne>int:1</moyenne>
+   <centre>int:1</centre>
+   <rand>int:3</rand>
+  </random>
   <pourcents>70,90,100</pourcents>
   <variation id="Classic">
    <niveau>defPlaine,defForet,defProfonde</niveau>

@@ -11,7 +11,11 @@ class Modele:
      self.hierarchie = self.racine["liste"] 
      self.tab = {}
      self.pourcents = {}
+     self.argsRand = {}
      for key,elt in self.racine["couche"].items():
+      self.argsRand[key] = {"moyenne":1,"centre":1,"rand":1}
+      if "random" in elt:
+       for k,e in elt["random"].items() : self.argsRand[key][k] = e
       self.pourcents[key] = [int(value) for value in elt["pourcents"] ]
 
     def determine(self,biome):

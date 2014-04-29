@@ -43,7 +43,7 @@ class Lecteur:
       return aux  
 
     def _clean(self,node):
-     if type(node) != type("") and type(node) != type(int) and type(node) != type(Color.BLACK):
+     if type(node) != type("") and type(node) != type(0) and type(node) != type(Color.BLACK):
       for key,elt in node.items():
        for element in elt.values():
         if type(element) == type([]):
@@ -59,5 +59,6 @@ class Lecteur:
      self.racine = self._parseNode(docxml.firstChild)
      self._clean(self.racine)
 
-a = Lecteur("patron.xml")
-a.parse()
+def fun():
+ a = Lecteur("patron.xml")
+ a.parse()

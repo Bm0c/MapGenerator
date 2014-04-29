@@ -22,7 +22,7 @@ class GenContinents:
      w.display()
 
     def _makeContinent(self,x,y):
-     if (not self.tab[x,y].biome.walkable) and self.tab[x,y].region == None:
+     if not (self.tab[x,y].biome.walkable and self.tab[x,y].region == None):
       return
      cases = [ (x,y) ]
      self.tab[x,y].continent = True
@@ -33,6 +33,7 @@ class GenContinents:
        self.tab[elt].continent = True
        cases.append(elt)
        voisins.extend(self.tab[elt].Voisins())
-     regions = GenRegionPasse(self.tab,cases,3)
+     print("Region")
+     regions = GenRegionPasse(self.tab,cases,9)
      regions.finalisation()
      self.continents.append(Continent(regions.regions))

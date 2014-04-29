@@ -22,7 +22,7 @@ class Case(hexagone):
      h = self._hexa()
      h.fill_color = self.biome.color
      h.outline_color = sf.Color(0,0,0,40)
-     h.outline_thickness = -1
+     #h.outline_thickness = -1
      return h
 
     def drawRegion(self):

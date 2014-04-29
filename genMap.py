@@ -21,8 +21,12 @@ class MapGen():
 
     def cycle(self,duree):
      for i in range(duree):
+      print("Iter " + str(i))
+      print("Division")
       self.Division()
+      print("Egalisation")
       self.Egalisation()
+     print("Finalisation")
      self.Finalisation()
 
     def Division(self,mod = 2):
@@ -67,10 +71,15 @@ class MapGen():
      x1,y1 =  aux[randrange(len(aux))]
      if compteur > 0:
       for elt in biome.dict.keys():
+        div = 0
         biome.div(elt,compteur)
-        biome.add(elt,self.tab[x,y].biome.dict[elt])
-        biome.add(elt,self.tab[x1,y1].biome.dict[elt])
-        biome.div(elt,3)
+        biome.mult(elt,self.modele.argsRand[elt]["moyenne"])
+        div += self.modele.argsRand[elt]["moyenne"]
+        biome.add(elt,self.tab[x,y].biome.dict[elt] * self.modele.argsRand[elt]["centre"])
+        div += self.modele.argsRand[elt]["centre"]
+        biome.add(elt,self.tab[x1,y1].biome.dict[elt] * self.modele.argsRand[elt]["rand"])
+        div += self.modele.argsRand[elt]["rand"]
+        biome.div(elt,div)
      return biome
 
     def Finalisation(self):

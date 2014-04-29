@@ -78,11 +78,10 @@ class Seed:
     def plaque(self,args = {"nombre" : 5, "plaques" : 8}):
      for x,y in self.tab.iterC():
       self.tab[x,y] = Case(x,y)
-      self.tab[x,y].value = 0 #randrange(self.minValue , (self.minValue + self.maxValue // 2) )
+      self.tab[x,y].value = randrange(self.minValue , (self.minValue + self.maxValue // 2) )
      liste = [ elt for elt in self.tab.iterB(1) ]
-     nombre = int(args["nombre"])
-     plaque = int(args["plaques"])
-     #plaques = GenRegionVoronoi(self.tab.X,self.tab.Y,nb = plaque)
+     nombre = args["nombre"]
+     plaque = args["plaques"]
      plaques = GenRegionPasse(self.tab,None,plaque,5)
      plaques.finalisation()
      liste_plaque = [ (elt.interieur,elt.frontiere) for elt in plaques.regions]

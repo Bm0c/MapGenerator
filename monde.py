@@ -19,7 +19,7 @@ class Monde:
      th = lambda x,y : w.draw(self.tab[x,y].sprite())
      self.tab.iter(th)
      th = lambda x,y : w.draw(self.tab[x,y].drawRegion())
-     self.tab.iter(th)
+#     self.tab.iter(th)
      th = lambda x,y : w.draw(self.tab[x,y].drawFrontiere())
      self.tab.iter(th)
      w.display()

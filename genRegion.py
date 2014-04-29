@@ -83,14 +83,15 @@ class GenRegionPasse(GenRegion):
        i = 0
        while len(region.voisins) and i < passe :
         x,y = region.voisins.pop(randrange(len(region.voisins)))
-        if (x,y) in tab and tab[x,y].biome.walkable and tab[x,y].region == None :
+        if tab[x,y].region == None :
          changement = True
          self.liste.remove((x,y))
-         region.voisins.extend([elt for elt in tab[x,y].Voisins()])
+         region.voisins.extend([elt for elt in tab[x,y].Voisins() if elt in tab and tab[elt].biome.walkable])
          i += 1
          region.addInt(tab[x,y])
 
     def finalisation(self):
+      print("Finalisation")
       for region in self.regions:
        region.Color = sf.Color(randrange(256),randrange(256),randrange(256),80)
        inte,frot = [],[]
