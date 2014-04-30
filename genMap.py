@@ -21,12 +21,8 @@ class MapGen():
 
     def cycle(self,duree):
      for i in range(duree):
-      print("Iter " + str(i))
-      print("Division")
       self.Division()
-      print("Egalisation")
       self.Egalisation()
-     print("Finalisation")
      self.Finalisation()
 
     def Division(self,mod = 2):
@@ -63,23 +59,22 @@ class MapGen():
      for elt in self.modele.hierarchie:
       biome.set(elt,0)
      for elt in self.tab[x,y].Voisins():
-      if elt in self.tab: 
+      if elt in self.tab :
        for elt1 in self.modele.hierarchie:
         biome.add(elt1,self.tab[elt].biome.dict[elt1])
        aux.append(elt)
-      compteur = compteur + 1
+       compteur = compteur + 1
      x1,y1 =  aux[randrange(len(aux))]
-     if compteur > 0:
-      for elt in biome.dict.keys():
-        div = 0
-        biome.div(elt,compteur)
-        biome.mult(elt,self.modele.argsRand[elt]["moyenne"])
-        div += self.modele.argsRand[elt]["moyenne"]
-        biome.add(elt,self.tab[x,y].biome.dict[elt] * self.modele.argsRand[elt]["centre"])
-        div += self.modele.argsRand[elt]["centre"]
-        biome.add(elt,self.tab[x1,y1].biome.dict[elt] * self.modele.argsRand[elt]["rand"])
-        div += self.modele.argsRand[elt]["rand"]
-        biome.div(elt,div)
+     for elt in biome.dict.keys():
+      div = 0
+      biome.div(elt,compteur)
+      biome.mult(elt,self.modele.argsRand[elt]["moyenne"])
+      div += self.modele.argsRand[elt]["moyenne"]
+      biome.add(elt,self.tab[x,y].biome.dict[elt] * self.modele.argsRand[elt]["centre"])
+      div += self.modele.argsRand[elt]["centre"]
+      biome.add(elt,self.tab[x1,y1].biome.dict[elt] * self.modele.argsRand[elt]["rand"])
+      div += self.modele.argsRand[elt]["rand"]
+      biome.div(elt,div)
      return biome
 
     def Finalisation(self):

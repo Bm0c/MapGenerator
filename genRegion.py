@@ -64,9 +64,10 @@ class GenRegionVoronoi(GenRegion):
 
 class GenRegionPasse(GenRegion):
 
-    def __init__(self,tab,liste = None ,nb = 10, passe = 20):
+    def __init__(self,tab,liste = None ,nb = 10, passe = 1):
      GenRegion.__init__(self,nb)
      self.tab = tab
+     self.iteration = 0
      if liste == None:
       self.liste = list(tab.tab)
      else:
@@ -80,18 +81,19 @@ class GenRegionPasse(GenRegion):
      while changement:
       changement = not changement
       for region in self.regions:
+       self.iteration += 1
        i = 0
        while len(region.voisins) and i < passe :
         x,y = region.voisins.pop(randrange(len(region.voisins)))
         if tab[x,y].region == None :
          changement = True
+         tab[x,y].nb = self.iteration
          self.liste.remove((x,y))
          region.voisins.extend([elt for elt in tab[x,y].Voisins() if elt in tab and tab[elt].biome.walkable])
          i += 1
          region.addInt(tab[x,y])
 
     def finalisation(self):
-      print("Finalisation")
       for region in self.regions:
        region.Color = sf.Color(randrange(256),randrange(256),randrange(256),80)
        inte,frot = [],[]

@@ -5,8 +5,8 @@
   <seed>
    <type>plaque</type>
    <args>
-    <nombre>int:2</nombre>
-    <plaques>int:2</plaques>
+    <nombre>int:3</nombre>
+    <plaques>int:3</plaques>
    </args>
   </seed>
   <random>

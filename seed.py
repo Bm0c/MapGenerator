@@ -78,7 +78,7 @@ class Seed:
     def plaque(self,args = {"nombre" : 5, "plaques" : 8}):
      for x,y in self.tab.iterC():
       self.tab[x,y] = Case(x,y)
-      self.tab[x,y].value = randrange(self.minValue , (self.minValue + self.maxValue // 2) )
+      self.tab[x,y].value = 0
      liste = [ elt for elt in self.tab.iterB(1) ]
      nombre = args["nombre"]
      plaque = args["plaques"]
@@ -89,4 +89,5 @@ class Seed:
       li,lf = liste_plaque[randrange(len(liste_plaque))]
       liste_plaque.remove((li,lf))
       for elt in [ (elt.u,elt.v)  for elt in li if (elt.u,elt.v) in liste]:
-       self.tab[elt].value = randint((self.minValue + self.maxValue)  * 3 // 4 , self.maxValue )
+       #self.tab[elt].value = randint((self.minValue + self.maxValue)  * 3 // 4 , self.maxValue )
+       self.tab[elt].value = int(((plaques.iteration - self.tab[elt].nb + 1) / plaques.iteration)* self.maxValue)

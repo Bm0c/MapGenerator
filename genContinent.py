@@ -9,7 +9,12 @@ class GenContinents:
     def __init__(self,tab):
      self.tab = tab
      self.continents = []
+     self.size = 0
      self.tab.iter(self._makeContinent)
+     for cont in self.continents:
+      regions = GenRegionPasse(self.tab,cont.liste,int(20 * (len(cont.liste) / self.size )))
+      regions.finalisation()
+      cont.regions = regions.regions
 
     def getTexture(self,w):
      for cont in self.continents:
@@ -22,7 +27,7 @@ class GenContinents:
      w.display()
 
     def _makeContinent(self,x,y):
-     if not (self.tab[x,y].biome.walkable and self.tab[x,y].region == None):
+     if not (self.tab[x,y].biome.walkable and not self.tab[x,y].continent):
       return
      cases = [ (x,y) ]
      self.tab[x,y].continent = True
@@ -33,7 +38,6 @@ class GenContinents:
        self.tab[elt].continent = True
        cases.append(elt)
        voisins.extend(self.tab[elt].Voisins())
-     print("Region")
-     regions = GenRegionPasse(self.tab,cases,9)
-     regions.finalisation()
-     self.continents.append(Continent(regions.regions))
+     cont = Continent(liste = cases)
+     self.size += len(cases)
+     self.continents.append(cont)

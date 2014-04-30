@@ -1,6 +1,6 @@
 class Continent:
 
-    def __init__(self, liste = None,regions = None):
+    def __init__(self,regions = None,liste = None):
      if regions == None: regions = []
      if liste == None: liste = []
      self.regions = regions
