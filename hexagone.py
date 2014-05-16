@@ -24,3 +24,6 @@ class hexagone:
         x = hexagone.l * self.u - (hexagone.l/2) * self.v
         y = (3 * hexagone.L / 4) * self.v
         return x,y
+
+    def getUV(self):
+        return(self.u,self.v)
